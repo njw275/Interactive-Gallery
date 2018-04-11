@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "paintingMoving", "Assembly-CSharp.csproj", "{F074B4A6-BED7-9183-DE6E-E367B35D008F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "paintingMoving", "Assembly-CSharp-firstpass.csproj", "{1A7FAF14-79E5-43EF-A273-4A1F03F46BD8}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "paintingMoving", "Assembly-CSharp-Editor.csproj", "{CC7515F3-3DC7-24E2-5388-80CB82DD7373}"
 EndProject
 Global
@@ -15,6 +17,10 @@ Global
 		{F074B4A6-BED7-9183-DE6E-E367B35D008F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F074B4A6-BED7-9183-DE6E-E367B35D008F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F074B4A6-BED7-9183-DE6E-E367B35D008F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A7FAF14-79E5-43EF-A273-4A1F03F46BD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A7FAF14-79E5-43EF-A273-4A1F03F46BD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A7FAF14-79E5-43EF-A273-4A1F03F46BD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A7FAF14-79E5-43EF-A273-4A1F03F46BD8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CC7515F3-3DC7-24E2-5388-80CB82DD7373}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CC7515F3-3DC7-24E2-5388-80CB82DD7373}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC7515F3-3DC7-24E2-5388-80CB82DD7373}.Release|Any CPU.ActiveCfg = Release|Any CPU

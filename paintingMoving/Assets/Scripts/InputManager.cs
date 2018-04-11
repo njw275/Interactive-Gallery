@@ -2,83 +2,49 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputManager : MonoBehaviour
-{
 
-	//This script should be attached to each controller (Controller Left or Controller Right)
-
+// This script manages controller input. Here we use trigger or press to move a game object.
+// Attach this script to each controller (Controller Left or Controller Right)
+public class InputManager : Photon.MonoBehaviour {
 	// Getting a reference to the controller GameObject
 	private SteamVR_TrackedObject trackedObj;
 	// Getting a reference to the controller Interface
 	private SteamVR_Controller.Device Controller;
+	public GameObject spherePrefab;
+	public GameObject go;
 
-	public LayerMask layerMask;
-	public float raycastDistance;
-
-	public GameObject cam;
-	public Material myMat;
-
-	private LineRenderer lr;
-	private Vector3[] positions;
-
-	public Light lt;
+	void Start(){
+	}
 
 	void Awake()
 	{
 		// initialize the trackedObj to the component of the controller to which the script is attached
-		trackedObj = GetComponent<SteamVR_TrackedObject>();
-
-		//----
-		lr = GetComponent<LineRenderer> ();
-		lr.material = new Material(Shader.Find("Sprites/Default"));
-
-		//a simple 2 color gradient with a fixed alpha of 1.0f
-		float alpha = 1f;
-		Gradient gradient = new Gradient ();
-		gradient.SetKeys (
-			new GradientColorKey[] { new GradientColorKey (Color.green, 0f), new GradientColorKey (Color.green, 1f) },
-			new GradientAlphaKey[] { new GradientAlphaKey (alpha, 0f), new GradientAlphaKey (alpha, 1f) }
-		);
-		lr.colorGradient = gradient;
-		lr.startWidth = 0.002f;
-		lr.endWidth = 0.002f;
-		positions = new Vector3[2];
-
-
-		//---
+		trackedObj = GetComponentInParent<SteamVR_TrackedObject>();
 	}
 
 	// Update is called once per frame
-	void Update()
-	{
-
+	void Update () {
 		Controller = SteamVR_Controller.Input((int)trackedObj.index);
-
-		positions [0] = transform.position;//new Vector3 (-2f,0.2f,0f);
-		positions [1] = transform.position;//new Vector3 (0f,0.2f,0f);
-		//positions [2] = new Vector3 (2f,-2f,0f);
-		lr.positionCount = positions.Length;
-		lr.SetPositions (positions);
-
-		Raycasting ();
-
+		
 		// Getting the Touchpad Axis
 		if (Controller.GetAxis() != Vector2.zero)
 		{
 			Debug.Log(gameObject.name + Controller.GetAxis());
-
-			if(transform.childCount > 2 && transform.GetChild(2).tag == "Light"){
-				lt.intensity = Controller.GetAxis().x + 1;
-			}
-//			Transform go = gameObject.transform.GetChild (1);
-//			go.parent = null;
-//			go.transform.localScale = Vector3.one;
 		}
 
 		// Getting the Trigger press
 		if (Controller.GetHairTriggerDown())
 		{
-			Debug.Log(gameObject.name + " Trigger Press");
+			
+
+            if (go == null) {
+                go = GameObject.Find("Cube");
+            }
+
+
+            //This line is the one that changes the value of photonView.isMine on the specified GameObject
+            go.GetComponent<PhotonView> ().RequestOwnership ();
+			go.GetComponent<TransformManager> ().SetNewParent (this.transform);
 
 		}
 
@@ -86,86 +52,21 @@ public class InputManager : MonoBehaviour
 		if (Controller.GetHairTriggerUp())
 		{
 
-			Transform go = gameObject.transform.GetChild (2);
-			go.parent = null;
-			go.transform.localScale = Vector3.one;
+            if (go == null) {
+                go = GameObject.Find("Cube");
+            }
 
-
-			
-//			//Here snap the paintintg to the wall:
-//			//1. find where we are looking's position
-//			//2. set the paitnings position to that x and y
-//			//3. set the parent to the wall
-//			Transform go = gameObject.transform.GetChild (1);
-//			go.parent = null;
-//			Transform wallToSnapTo = cam.GetComponent<HeadsetRaycast> ().myWall.transform;
-//			//4. set the z to the wall's z
-//			Debug.Log("You looked at the: " + wallToSnapTo.name);
-//
-//
-//			switch (wallToSnapTo.name) {
-//			case "SouthWall": //worried about x&y and snap to wall's z position
-//				if(wallToSnapTo.childCount != 0){
-//
-//					go.transform.position = new Vector3(go.transform.position.x,wallToSnapTo.GetChild(0).transform.position.y,(wallToSnapTo.position.z+(wallToSnapTo.localScale.z/2)+.01f));
-//				}
-//				else{
-//					go.transform.position = new Vector3(go.transform.position.x,go.transform.position.y,(wallToSnapTo.position.z+(wallToSnapTo.localScale.z/2)+.01f));
-//				}
-//				break;
-//
-//
-//			case "NorthWall": //worried about x&y and snap to wall's z position
-//				if(wallToSnapTo.childCount != 0){
-//
-//					go.transform.position = new Vector3(go.transform.position.x,wallToSnapTo.GetChild(0).transform.position.y,(wallToSnapTo.position.z-(wallToSnapTo.localScale.z/2)-.01f));
-//				}
-//				else{
-//					go.transform.position = new Vector3(go.transform.position.x,go.transform.position.y,(wallToSnapTo.position.z-(wallToSnapTo.localScale.z/2)-.01f));
-//				}
-//				break;
-//
-//
-//			case "EastWall": //worried about y&z and snap to wall's x position 
-//				if(wallToSnapTo.childCount != 0){ 
-//
-//					go.transform.position = new Vector3 ((wallToSnapTo.position.x-(wallToSnapTo.localScale.z/2)-.01f),wallToSnapTo.GetChild(0).transform.position.y,go.transform.position.z);
-//				}
-//				else{
-//					go.transform.position = new Vector3((wallToSnapTo.position.x-(wallToSnapTo.localScale.z/2)-.01f),go.transform.position.y,go.transform.position.z);
-//				}
-//				break;
-//
-//
-//			case "WestWall": //worried about y&z and snap to wall's x position 
-//				if(wallToSnapTo.childCount != 0){ 
-//
-//					go.transform.position = new Vector3 ((wallToSnapTo.position.x+(wallToSnapTo.localScale.z/2)+.01f),wallToSnapTo.GetChild(0).transform.position.y,go.transform.position.z);
-//				}
-//				else{
-//					go.transform.position = new Vector3((wallToSnapTo.position.x+(wallToSnapTo.localScale.z/2)+.01f),go.transform.position.y,go.transform.position.z);
-//				}
-//				break;
-//
-//
-//			}
-//			//This is if walltosnapto is SouthWall
-//
-//
-//
-//
-//
-//
-//			go.transform.localScale = Vector3.one;
-//			go.SetParent(wallToSnapTo);
-//
-//			Debug.Log(gameObject.name + " Trigger Release");
+            // Make sure we have ownership before we do anything the the objects
+            go.GetComponent<PhotonView> ().RequestOwnership ();
+			go.GetComponent<TransformManager>().DetachParent ();
 		}
 
 		// Getting the Grip Press
 		if (Controller.GetPressDown(SteamVR_Controller.ButtonMask.Grip))
 		{
 			Debug.Log(gameObject.name + " Grip Press");
+
+			PhotonNetwork.Instantiate(spherePrefab.name, new Vector3(0,3,0), Quaternion.identity, 0);
 		}
 
 		// Getting the Grip Release
@@ -174,86 +75,4 @@ public class InputManager : MonoBehaviour
 			Debug.Log(gameObject.name + " Grip Release");
 		}
 	}
-
-
-	void Raycasting(){
-		Vector3 fwd = transform.TransformDirection (Vector3.forward); //what is the direction in front of us
-		RaycastHit hit = new RaycastHit ();
-
-		if(Physics.Raycast(transform.position, fwd, out hit, raycastDistance, layerMask)){
-			//Debug.Log ("hit object: " + hit.collider.gameObject.name);
-			Debug.Log ("I hit: " + hit.collider.transform);
-			//Debug.Log ("hitting: " + hit.collider);
-
-	
-			if ( (hit.collider.gameObject.tag == "Light" || hit.collider.gameObject.tag == "Painting") && Controller.GetHairTriggerDown () ) {
-				Debug.Log("setting parent of: " + hit.collider.gameObject);
-		
-				hit.collider.gameObject.transform.SetParent (transform);
-				hit.collider.gameObject.transform.position = transform.position;
-	
-			} 
-			else if (hit.collider.gameObject.tag == "Light" || hit.collider.gameObject.tag == "Painting") {
-				Debug.Log ("drawing line now...");
-				//
-
-
-				//set some positions
-
-				positions [0] = transform.position;//new Vector3 (-2f,0.2f,0f);
-				positions [1] = hit.collider.gameObject.transform.position;//new Vector3 (0f,0.2f,0f);
-				//positions [2] = new Vector3 (2f,-2f,0f);
-				lr.positionCount = positions.Length;
-				lr.SetPositions (positions);
-
-			}
-		}
-	}
-
-	void OnCollisionEnter(Collision collision){
-
-		Debug.Log ("I hit something and it was: " + collision.gameObject);
-		if (transform.childCount > 2) {
-
-			Transform go = gameObject.transform.GetChild (2);
-			go.parent = null;
-			Transform wallToSnapTo = collision.gameObject.transform;
-		
-			switch (collision.gameObject.name) {
-
-			case "NorthWall":
-				go.transform.localScale = Vector3.one;
-				go.transform.eulerAngles = Vector3.zero;
-				//go.SetParent(wallToSnapTo);
-
-				break;
-
-			case "SouthWall":
-				go.transform.localScale = Vector3.one;
-				go.transform.eulerAngles = new Vector3(0f,180f,0f);
-				//go.SetParent(wallToSnapTo);
-
-				break;
-
-			case "EastWall":
-				go.transform.localScale = Vector3.one;
-				go.transform.eulerAngles = new Vector3(0f,90f,0f);
-				//go.SetParent(wallToSnapTo);
-
-				break;
-
-			case "WestWall":
-				go.transform.localScale = Vector3.one;
-				go.transform.eulerAngles = new Vector3(0f,-90f,0f);
-				//go.SetParent(wallToSnapTo);
-
-				break;
-		
-			
-			}
-		
-		}
-
-	}
-
 }
