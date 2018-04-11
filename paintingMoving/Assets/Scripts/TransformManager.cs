@@ -9,9 +9,14 @@ public class TransformManager : Photon.MonoBehaviour {
 
 	PhotonView photonView;
 
-	void Start(){
+    private Vector3 syncStartPosition; // = transform.position;//Vector3.zero;
+    private Vector3 syncEndPosition; // = transform.position; //Vector3.zero;
+
+    void Start(){
 		photonView = PhotonView.Get (this);
-	}
+        syncStartPosition = transform.position; // = transform.position;//Vector3.zero;
+        syncEndPosition = transform.position; // = transform.position; //Vector3.zero;
+}
 
 	// Update is called once per frame
 	void Update () {
@@ -24,8 +29,6 @@ public class TransformManager : Photon.MonoBehaviour {
 	private float lastSynchronizationTime = 0f;
 	private float syncDelay = 0f;
 	private float syncTime = 0f;
-	private Vector3 syncStartPosition = Vector3.zero;
-	private Vector3 syncEndPosition = Vector3.zero;
 
 	//Here if we are writing to the stream we send position and velocity
 	//otherwise we are reading the position and the velocity from the stream to get the update information
