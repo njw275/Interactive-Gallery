@@ -46,7 +46,6 @@ public class OG_InputManager : MonoBehaviour
 		positions = new Vector3[2];
 
 
-		//---
 	}
 
 	// Update is called once per frame
@@ -91,8 +90,116 @@ public class OG_InputManager : MonoBehaviour
 			go.parent = null;
 			go.transform.localScale = Vector3.one;
 
+		}
 
+		// Getting the Grip Press
+		if (Controller.GetPressDown(SteamVR_Controller.ButtonMask.Grip))
+		{
+			Debug.Log(gameObject.name + " Grip Press");
+		}
+
+		// Getting the Grip Release
+		if (Controller.GetPressUp(SteamVR_Controller.ButtonMask.Grip))
+		{
+			Debug.Log(gameObject.name + " Grip Release");
+		}
+	}
+
+
+	void Raycasting(){
+		Vector3 fwd = transform.TransformDirection (Vector3.forward); //what is the direction in front of us
+		RaycastHit hit = new RaycastHit ();
+
+		if(Physics.Raycast(transform.position, fwd, out hit, raycastDistance, layerMask)){
+			//Debug.Log ("hit object: " + hit.collider.gameObject.name);
+			//Debug.Log ("I hit: " + hit.collider.transform);
+			//Debug.Log ("hitting: " + hit.collider);
+
+	
+			if ( (hit.collider.gameObject.tag == "Light" || hit.collider.gameObject.tag == "Painting") && Controller.GetHairTriggerDown () ) {
+				Debug.Log("setting parent of: " + hit.collider.gameObject);
+		
+				hit.collider.gameObject.transform.SetParent (transform);
+				hit.collider.gameObject.transform.position = new Vector3(transform.position.x,transform.position.y+2.0f,transform.position.z);
+	
+			} 
+			else if (hit.collider.gameObject.tag == "Light" || hit.collider.gameObject.tag == "Painting") {
+				Debug.Log ("drawing line now...");
+				//
+
+
+				//set some positions
+
+				positions [0] = transform.position;//new Vector3 (-2f,0.2f,0f);
+				positions [1] = hit.collider.gameObject.transform.position;//new Vector3 (0f,0.2f,0f);
+				//positions [2] = new Vector3 (2f,-2f,0f);
+				lr.positionCount = positions.Length;
+				lr.SetPositions (positions);
+
+			}
+		}
+	}
+
+	void OnCollisionEnter(Collision collision){
+
+		Debug.Log ("My chuildCount is: " + transform.childCount);
+		if (transform.childCount > 2) {
+
+			Transform go = gameObject.transform.GetChild (2);
+			go.parent = null;
+			Transform wallToSnapTo = collision.gameObject.transform;
+			Debug.Log (wallToSnapTo);
+			Debug.Log ("go child: " + go);
+
+			//go.transform.localScale = Vector3.one;
+//			go.transform.eulerAngles = Vector3.zero;
+			//go.transform.rotation = Quaternion.Euler(0f,headset.transform.rotation.y,0f);//LookAt(headset.transform);
+
+			switch (collision.gameObject.name) {
+
+			case "NorthWall":
+				//go.transform.localScale = Vector3.one;
+				go.transform.eulerAngles = Vector3.zero;
+				go.SetParent(wallToSnapTo);
+
+				break;
+
+			case "SouthWall":
+				//go.transform.localScale = Vector3.one;
+				go.transform.eulerAngles = new Vector3(0f,180f,0f);
+				go.SetParent(wallToSnapTo);
+
+				break;
+
+			case "EastWall":
+				//go.transform.localScale = Vector3.one;
+				go.transform.eulerAngles = new Vector3(0f,90f,0f);
+				go.SetParent(wallToSnapTo);
+
+				break;
+
+			case "WestWall":
+				//go.transform.localScale = Vector3.one;
+				go.transform.eulerAngles = new Vector3(0f,-90f,0f);
+				go.SetParent(wallToSnapTo);
+
+				break;
+		
 			
+			}
+		
+		}
+
+	}
+
+}
+
+
+
+//Hair Trigger Up commented out code
+
+
+
 //			//Here snap the paintintg to the wall:
 //			//1. find where we are looking's position
 //			//2. set the paitnings position to that x and y
@@ -161,105 +268,3 @@ public class OG_InputManager : MonoBehaviour
 //			go.SetParent(wallToSnapTo);
 //
 //			Debug.Log(gameObject.name + " Trigger Release");
-		}
-
-		// Getting the Grip Press
-		if (Controller.GetPressDown(SteamVR_Controller.ButtonMask.Grip))
-		{
-			Debug.Log(gameObject.name + " Grip Press");
-		}
-
-		// Getting the Grip Release
-		if (Controller.GetPressUp(SteamVR_Controller.ButtonMask.Grip))
-		{
-			Debug.Log(gameObject.name + " Grip Release");
-		}
-	}
-
-
-	void Raycasting(){
-		Vector3 fwd = transform.TransformDirection (Vector3.forward); //what is the direction in front of us
-		RaycastHit hit = new RaycastHit ();
-
-		if(Physics.Raycast(transform.position, fwd, out hit, raycastDistance, layerMask)){
-			//Debug.Log ("hit object: " + hit.collider.gameObject.name);
-			Debug.Log ("I hit: " + hit.collider.transform);
-			//Debug.Log ("hitting: " + hit.collider);
-
-	
-			if ( (hit.collider.gameObject.tag == "Light" || hit.collider.gameObject.tag == "Painting") && Controller.GetHairTriggerDown () ) {
-				Debug.Log("setting parent of: " + hit.collider.gameObject);
-		
-				hit.collider.gameObject.transform.SetParent (transform);
-				hit.collider.gameObject.transform.position = transform.position;
-	
-			} 
-			else if (hit.collider.gameObject.tag == "Light" || hit.collider.gameObject.tag == "Painting") {
-				Debug.Log ("drawing line now...");
-				//
-
-
-				//set some positions
-
-				positions [0] = transform.position;//new Vector3 (-2f,0.2f,0f);
-				positions [1] = hit.collider.gameObject.transform.position;//new Vector3 (0f,0.2f,0f);
-				//positions [2] = new Vector3 (2f,-2f,0f);
-				lr.positionCount = positions.Length;
-				lr.SetPositions (positions);
-
-			}
-		}
-	}
-
-	void OnCollisionEnter(Collision collision){
-
-		Debug.Log ("I hit something and it was: " + collision.gameObject);
-		if (transform.childCount > 2) {
-
-			Transform go = gameObject.transform.GetChild (2);
-			go.parent = null;
-			Transform wallToSnapTo = collision.gameObject.transform;
-			Debug.Log (wallToSnapTo);
-
-			go.transform.localScale = Vector3.one;
-//			go.transform.eulerAngles = Vector3.zero;
-			//go.transform.rotation = Quaternion.Euler(0f,headset.transform.rotation.y,0f);//LookAt(headset.transform);
-
-//			switch (collision.gameObject.name) {
-//
-//			case "NorthWall":
-//				go.transform.localScale = Vector3.one;
-//				go.transform.eulerAngles = Vector3.zero;
-//				//go.SetParent(wallToSnapTo);
-//
-//				break;
-//
-//			case "SouthWall":
-//				go.transform.localScale = Vector3.one;
-//				go.transform.eulerAngles = new Vector3(0f,180f,0f);
-//				//go.SetParent(wallToSnapTo);
-//
-//				break;
-//
-//			case "EastWall":
-//				go.transform.localScale = Vector3.one;
-//				go.transform.eulerAngles = new Vector3(0f,90f,0f);
-//				//go.SetParent(wallToSnapTo);
-//
-//				break;
-//
-//			case "WestWall":
-//				go.transform.localScale = Vector3.one;
-//				go.transform.eulerAngles = new Vector3(0f,-90f,0f);
-//				//go.SetParent(wallToSnapTo);
-//
-//				break;
-//		
-//			
-//			}
-		
-		}
-
-	}
-
-}
