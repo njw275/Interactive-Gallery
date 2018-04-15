@@ -20,8 +20,8 @@ public class TransformManager : Photon.MonoBehaviour {
         syncStartPosition = transform.position; // = transform.position;//Vector3.zero;
         syncEndPosition = transform.position; // = transform.position; //Vector3.zero;
 
-//		syncStartRotation = transform.rotation; // = transform.position;//Vector3.zero;
-//		syncEndRotation = transform.rotation; // = transform.position; //Vector3.zero;
+		syncStartRotation = transform.rotation; // = transform.position;//Vector3.zero;
+		syncEndRotation = transform.rotation; // = transform.position; //Vector3.zero;
 	}
 
 	// Update is called once per frame
@@ -45,13 +45,19 @@ public class TransformManager : Photon.MonoBehaviour {
 		{
 			stream.SendNext(rb.position);
 			stream.SendNext(rb.velocity);
-//			stream.SendNext(rb.rotation);
+			stream.SendNext(rb.rotation);
+			stream.SendNext (rb.angularVelocity);
 		}
 		else
 		{
 			Vector3 syncPosition = (Vector3)stream.ReceiveNext();
 			Vector3 syncVelocity = (Vector3)stream.ReceiveNext();
-//			Quaternion syncRotation = (Quaternion)stream.ReceiveNext ();
+			Quaternion syncRotation = (Quaternion)stream.ReceiveNext ();
+
+
+			// New stuff from the internet
+			rb.angularVelocity = (Vector3)stream.ReceiveNext ();
+
 
 			syncTime = 0f;
 			syncDelay = Time.time - lastSynchronizationTime;
@@ -61,7 +67,7 @@ public class TransformManager : Photon.MonoBehaviour {
 			syncStartPosition = rb.position;
 
 			//Trying with Rotation as well
-//			syncEndRotation = syncRotation + syncVelocity * syncDelay;
+//			syncEndRotation = syncRotation + angularVelocity * syncDelay;
 //			syncStartRotation = rb.rotation;
 
 		}
@@ -72,7 +78,7 @@ public class TransformManager : Photon.MonoBehaviour {
 		Rigidbody rb = GetComponent<Rigidbody> ();
 		syncTime += Time.deltaTime;
 		rb.position = Vector3.Lerp(syncStartPosition, syncEndPosition, syncTime / syncDelay);
-		//rb.rotation = Vector3.Lerp(syncStartRotation, syncEndRotation, syncTime / syncDelay);
+		rb.rotation = Quaternion.Lerp(syncStartRotation, syncEndRotation, syncTime / syncDelay);
 	}
 
 	public void StartColorChange(Vector3 color){
