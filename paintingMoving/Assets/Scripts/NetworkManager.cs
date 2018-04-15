@@ -144,7 +144,7 @@ public class NetworkManager : MonoBehaviour {
 		//Now for right controller
 
 		GameObject controllerRight = GameObject.Find("Controller (right)/Model");
-		GameObject capsuleHandRight = PhotonNetwork.Instantiate(capsulehand.name, controllerLeft.transform.position+ new Vector3(0f,0f,0f), transform.localRotation, 0);
+		GameObject capsuleHandRight = PhotonNetwork.Instantiate(capsulehand.name, controllerRight.transform.position+ new Vector3(0f,0f,0f), transform.localRotation, 0);
 		//capsuleHandRight.transform.Rotate(-90f, 0f, 0f);
 		capsuleHandRight.transform.SetParent (controllerRight.transform);
 

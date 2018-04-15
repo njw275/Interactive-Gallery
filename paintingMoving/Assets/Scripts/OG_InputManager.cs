@@ -53,7 +53,7 @@ public class OG_InputManager : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if (reset) {
+
 			float alpha = 1f;
 			Gradient gradient = new Gradient ();
 			gradient.SetKeys (
@@ -69,7 +69,7 @@ public class OG_InputManager : MonoBehaviour
 			//positions [2] = new Vector3 (2f,-2f,0f);
 			lr.positionCount = positions.Length;
 			lr.SetPositions (positions);
-		}
+		
 		Raycasting ();
 
 		// Getting the Touchpad Axis
@@ -109,33 +109,33 @@ public class OG_InputManager : MonoBehaviour
 		// Getting the Grip Press
 		if (Controller.GetPressDown(SteamVR_Controller.ButtonMask.Grip))
 		{
-			Debug.Log(gameObject.name + " Grip Press");
-			float alpha = 1f;
-			Gradient gradient = new Gradient ();
-			gradient.SetKeys (
-				new GradientColorKey[] { new GradientColorKey (Color.yellow, 0f), new GradientColorKey (Color.yellow, 1f) },
-				new GradientAlphaKey[] { new GradientAlphaKey (alpha, 0f), new GradientAlphaKey (alpha, 1f) }
-			);
-			lr.colorGradient = gradient;
-
-			//set some positions
-
-			positions [0] = transform.position;//new Vector3 (-2f,0.2f,0f);
-//			var localDirection = transform.InverseTransformPoint (transform.forward);
-			//var localDirection = transform.InverseTransformDirection(transform.forward);
-			positions [1] = transform.TransformDirection(transform.forward);//hit.collider.gameObject.transform.position;//new Vector3 (0f,0.2f,0f);
-			//positions [2] = new Vector3 (2f,-2f,0f);
-			Debug.Log("fwd on yellow is: " + Vector3.forward);
-			lr.positionCount = positions.Length;
-			lr.SetPositions (positions);
-			reset = false;
+//			Debug.Log(gameObject.name + " Grip Press");
+//			float alpha = 1f;
+//			Gradient gradient = new Gradient ();
+//			gradient.SetKeys (
+//				new GradientColorKey[] { new GradientColorKey (Color.yellow, 0f), new GradientColorKey (Color.yellow, 1f) },
+//				new GradientAlphaKey[] { new GradientAlphaKey (alpha, 0f), new GradientAlphaKey (alpha, 1f) }
+//			);
+//			lr.colorGradient = gradient;
+//
+//			//set some positions
+//
+//			positions [0] = transform.position;//new Vector3 (-2f,0.2f,0f);
+////			var localDirection = transform.InverseTransformPoint (transform.forward);
+//			//var localDirection = transform.InverseTransformDirection(transform.forward);
+//			positions [1] = transform.TransformDirection(transform.forward);//hit.collider.gameObject.transform.position;//new Vector3 (0f,0.2f,0f);
+//			//positions [2] = new Vector3 (2f,-2f,0f);
+//			Debug.Log("fwd on yellow is: " + Vector3.forward);
+//			lr.positionCount = positions.Length;
+//			lr.SetPositions (positions);
+//			reset = false;
 		}
 
 		// Getting the Grip Release
 		if (Controller.GetPressUp(SteamVR_Controller.ButtonMask.Grip))
 		{
-			Debug.Log(gameObject.name + " Grip Release");
-			reset = true;
+//			Debug.Log(gameObject.name + " Grip Release");
+//			reset = true;
 		}
 	}
 
