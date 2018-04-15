@@ -43,6 +43,7 @@ public class TransformManager : Photon.MonoBehaviour {
 		Rigidbody rb = GetComponent<Rigidbody> ();
 		if (stream.isWriting)
 		{
+			
 			stream.SendNext(rb.position);
 			stream.SendNext(rb.velocity);
 			stream.SendNext(rb.rotation);
@@ -67,8 +68,8 @@ public class TransformManager : Photon.MonoBehaviour {
 			syncStartPosition = rb.position;
 
 			//Trying with Rotation as well
-//			syncEndRotation = syncRotation + angularVelocity * syncDelay;
-//			syncStartRotation = rb.rotation;
+			syncEndRotation = syncRotation; // + angularVelocity * syncDelay;
+			syncStartRotation = rb.rotation;
 
 		}
 	}
