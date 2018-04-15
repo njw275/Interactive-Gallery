@@ -11,12 +11,18 @@ public class TransformManager : Photon.MonoBehaviour {
 
     private Vector3 syncStartPosition; // = transform.position;//Vector3.zero;
     private Vector3 syncEndPosition; // = transform.position; //Vector3.zero;
+	private Quaternion syncStartRotation;
+	private Quaternion syncEndRotation;
+
 
     void Start(){
 		photonView = PhotonView.Get (this);
         syncStartPosition = transform.position; // = transform.position;//Vector3.zero;
         syncEndPosition = transform.position; // = transform.position; //Vector3.zero;
-}
+
+//		syncStartRotation = transform.rotation; // = transform.position;//Vector3.zero;
+//		syncEndRotation = transform.rotation; // = transform.position; //Vector3.zero;
+	}
 
 	// Update is called once per frame
 	void Update () {
@@ -39,11 +45,13 @@ public class TransformManager : Photon.MonoBehaviour {
 		{
 			stream.SendNext(rb.position);
 			stream.SendNext(rb.velocity);
+//			stream.SendNext(rb.rotation);
 		}
 		else
 		{
 			Vector3 syncPosition = (Vector3)stream.ReceiveNext();
 			Vector3 syncVelocity = (Vector3)stream.ReceiveNext();
+//			Quaternion syncRotation = (Quaternion)stream.ReceiveNext ();
 
 			syncTime = 0f;
 			syncDelay = Time.time - lastSynchronizationTime;
@@ -51,6 +59,11 @@ public class TransformManager : Photon.MonoBehaviour {
 
 			syncEndPosition = syncPosition + syncVelocity * syncDelay;
 			syncStartPosition = rb.position;
+
+			//Trying with Rotation as well
+//			syncEndRotation = syncRotation + syncVelocity * syncDelay;
+//			syncStartRotation = rb.rotation;
+
 		}
 	}
 
@@ -59,6 +72,7 @@ public class TransformManager : Photon.MonoBehaviour {
 		Rigidbody rb = GetComponent<Rigidbody> ();
 		syncTime += Time.deltaTime;
 		rb.position = Vector3.Lerp(syncStartPosition, syncEndPosition, syncTime / syncDelay);
+		//rb.rotation = Vector3.Lerp(syncStartRotation, syncEndRotation, syncTime / syncDelay);
 	}
 
 	public void StartColorChange(Vector3 color){
