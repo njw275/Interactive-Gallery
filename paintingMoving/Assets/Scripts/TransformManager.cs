@@ -77,8 +77,26 @@ public class TransformManager : Photon.MonoBehaviour {
 			photonView.RPC("ChangeColorTo", PhotonTargets.OthersBuffered, color);
 	}
 
-	//Move the object
-	[PunRPC] void MoveTo(Vector3 direction)
+    //Change the color to more transparent
+    [PunRPC] public void MakeTransparent() {
+        Color myColor = GetComponent<Renderer>().material.color;
+        myColor.a = 0.3f;
+        GetComponent<Renderer>().material.color = myColor;
+        if (photonView.isMine)
+            photonView.RPC("MakeTransparent", PhotonTargets.OthersBuffered, photonView.viewID);
+    }
+
+    //Change the color to no transparency 
+    [PunRPC] public void MakeVisible() {
+        Color myColor = GetComponent<Renderer>().material.color;
+        myColor.a = 1f;
+        GetComponent<Renderer>().material.color = myColor;
+        if (photonView.isMine)
+            photonView.RPC("MakeVisible", PhotonTargets.OthersBuffered, photonView.viewID);
+    }
+
+    //Move the object
+    [PunRPC] void MoveTo(Vector3 direction)
 	{
 		GetComponent<Transform>().position = direction;
 		if (photonView.isMine)
