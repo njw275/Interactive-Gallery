@@ -4,7 +4,8 @@
     <Files>
       <File FileName="Assets\Scripts\Old Scripts\InputManager.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\OG_InputManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\TransformManager.cs" Line="81" Column="20" />
+      <File FileName="Assets\Scripts\TransformManager.cs" Line="128" Column="50" />
+      <File FileName="Assets\Scripts\NetworkManager.cs" Line="147" Column="132" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
