@@ -88,6 +88,7 @@ public class TransformManager : Photon.MonoBehaviour {
 	//set a new parent
 	[PunRPC] public void SetNewParent(Transform tr){
 		transform.SetParent (tr);
+		transform.position = new Vector3 (tr.position.x, tr.position.y, tr.position.z);
 		if (photonView.isMine)
 			photonView.RPC("SetNewParent", PhotonTargets.OthersBuffered,tr);
 	}
